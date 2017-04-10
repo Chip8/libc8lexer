@@ -44,7 +44,8 @@ std::vector<std::string> lexer(std::string ProgLine,
                                std::ofstream& LexerLogFile) {
   try {
     if (ProgLine.length() == 0) throw LexEE;
-    if (ProgLine.back() != ';') ProgLine += ";";
+    std::transform(ProgLine.begin(), ProgLine.end(), ProgLine.begin(),
+                   std::toupper) if (ProgLine.back() != ';') ProgLine += ";";
     std::stringstream LogStream;
     std::string Token("");
     std::string Var("");
