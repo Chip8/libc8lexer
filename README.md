@@ -5,48 +5,45 @@ A lexer module for Chip-8 assembly.
 *Extra Link:  [Standard Chip-8 Instructions](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#3.1)*
 ## Usage
 
-There a mainly two functions.
+Include the header file as a static/dynamic library file.
 
-### libc8Lexer
-
-This is lexer for a hole source program(lexer line to line).
-
-#### For example:
+### class C8Lexer
 
 ```asm
-//file test.asm
+//Source file content,read into string source
 ADD V1, V2
 SUB V2, V3
+JP I
+CALL I
 ```
 
-```c++
-std::istream infile(test.asm);
-std::stringstream ss;
-ss<<infile.rdbuf();
-for(auto x:libc8Lexer(ss.str()))
-	std::cout<<x<<" ";
-infile.close();
+```C++
+libc8lexer lexer(source);
+if(lexer.Scan())
+	{
+	std::cout<<lexer.Output();
+}
 ```
 
 The output would be:
+
 ```
-ADD V1 V2 SUB V2 V3
+[Instruction]    (2 - 5) : ADD
+[8 Bit Register]    (5 - 6) : V1
+[Comma]    (6) : ,
+[8 Bit Register]    (9 - 10) : V2
+[Instruction]    (13 - 16) : SUB
+[8 Bit Register]    (16 - 17) : V2
+[Comma]    (17) : ,
+[8 Bit Register]    (20 - 21) : V3
+[Instruction]    (23 - 25) : JP
+[Address Register]    (25) : I
+[Instruction]    (30 - 34) : CALL
+[Address Register]    (32) : I
 ```
 
-### libc8LineLexer
+*There are also a member function of libc8lexer which returns the token list*
 
-This is a one line lexer,cuz it only supports to read one line(no '\n')
-
-But you can use ';' to specify one line;
-
-#### Example
-
-```c++
-std::string source = "ADD V1,V2;ADD V2,V3;DRW V1, V2, 3";
-for(auto x:libc8LineLexer(source,log))
-	std::cout<<x<<" ";
-```
-The output would be:
-```
-ADD V1 V2 ADD V2 V3 DRW V1 V2 3
+```C++
+std::vector<libc8Token>& libc8lexer::GetList()
 ```
