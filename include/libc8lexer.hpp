@@ -1,67 +1,58 @@
-#include <algorithm>
 #include <exception>
-#include <fstream>
-#include <iostream>
-#include <iterator>
 #include <sstream>
 #include <string>
 #include <vector>
 
-const char AlphaTable[] = "0123456789ABCDEFHIJKLNPRSTUVW";
+#ifndef LIBC8_LEXER_H
+#define LIBC8_LEXER_H
+static const char AlphaTable[] = "0123456789ABCDEFGHIJKLMNOPRSTUVWXYZ,@!/\n\t ";
 // The empty
-class LexEmptyExc : public std::runtime_error {
+
+enum C8TokenType { INS, BIT8REG, VAR, ADDREG, TIMER, COMMA };
+
+// Chip-8 assembly token types
+std::string C8TokenTypeTable[] = {"Instruction", "8 Bit Register",
+                                  "Var",         "Address Register",
+                                  "Timer",       "Comma"};
+
+// Chip-8 Token Type class
+class C8Token {
  public:
-  LexEmptyExc() : runtime_error("Empty Line."){};
-  virtual const char* what() const throw() { return runtime_error::what(); }
-} LexEE;
-class LexErrorToken : public std::runtime_error {
+  C8Token();
+  ~C8Token();
+  inline std::string Type();
+  inline std::string Token();
+  template <typename T>
+  C8Token(C8TokenType TypeID, std::string Token, unsigned int Pos_Start,
+          unsigned int Pos_End = NULL);
+
+ private:
+  C8TokenType TypeID;
+  std::string Token;
+  unsigned int Pos_Start;
+  unsigned int Pos_End;
+};
+
+class C8Lexer {
  public:
-  LexErrorToken() : runtime_error("Error Token."){};
-  virtual const char* what() const throw() { return runtime_error::what(); }
-} LexET;
+  C8Lexer();
+  C8Lexer(std::string SourceProg);
+  ~C8Lexer();
+  bool Scan();  // scan source and constructs token lists
+  std::vector<C8Token>& GetList();
+  // Generates lexer output string
+  std::string Output(std::vector<C8Token> TokenList);
+  std::string Output();
 
-// Write log to file
-bool LexerLogWriter(std::string LogLine, std::ofstream& LexerLogFile) {
-  if (!LexerLogFile.is_open())
-    return false;
-  else {
-    LexerLogFile << LogLine;
-    return true;
-  }
+ private:
+  std::string SourceProg;
+  bool Scanned = false;
+  std::vector<C8Token> TokenList;
 }
 
-std::vector<std::string> libc8LineLineLexer(std::string ProgLine) {
-  std::vector<std::string> TokenList;
-  try {
-    if (ProgLine.length() == 0) throw LexEE;
-    if (ProgLine.back() != ';')
-      ProgLine += ";";  // Add a ';' to end for split line;
-    std::string Token("");
-    for (auto x : ProgLine) {
-      if (x == ' ' || x == ',' || x == ';') {  // skip ' ' and ','
-        TokenList.push_back(Token);
-        Token = "";
-      } else {
-        if (std::find(std::begin(AlphaTable), std::end(AlphaTable), x) ==
-            std::end(AlphaTable))
-          throw LexET;
-        Token += x;
-      }
-    }
-  } catch (std::exception& e) {
-    std::cerr << "Error occured!Error info: " << e.what() << std::endl;
-  }
-  return TokenList;
-}
+std::vector<C8Token>
+libc8Lexer(std::string SourceProg);
 
-std::vector<std::string> libc8Lexer(std::string Source) {
-  std::stringstream SourceStream;
-  SourceStream << Source;
-  std::vector<std::string> TokenList;
-  std::string ProgLine;
-  while (std::getline(SourceStream, ProgLine)) {
-    std::vector<std::string> LineList = libc8LineLineLexer(ProgLine);
-    TokenList.insert(TokenList.end(), LineList.begin(), LineList.end());
-  }
-  return TokenList;
-}
+std::string libc8LexerOutput(std::vector<C8Token> TokenList);
+
+#endif
