@@ -5,9 +5,7 @@ A lexer module for Chip-8 assembly.
 *Extra Link:  [Standard Chip-8 Instructions](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#3.1)*
 ## Usage
 
-There a mainly two functions.Each of them have two overload,one has log output and other doesn't.
-
-To use the output version, just passsing a ofstream.
+There a mainly two functions.
 
 ### libc8Lexer
 
@@ -44,7 +42,6 @@ But you can use ';' to specify one line;
 #### Example
 
 ```c++
-std::ofstream log = ("test.log");
 std::string source = "ADD V1,V2;ADD V2,V3;DRW V1, V2, 3";
 for(auto x:libc8LineLexer(source,log))
 	std::cout<<x<<" ";
@@ -52,17 +49,4 @@ for(auto x:libc8LineLexer(source,log))
 The output would be:
 ```
 ADD V1 V2 ADD V2 V3 DRW V1 V2 3
-```
-And contents in test.log:
-```
-Instruction found: ADD
-8 Bit Register found: V1
-8 Bit Register found: V2
-Instruction found: ADD
-8 Bit Register found: V2
-8 Bit Register found: V3
-Instruction found: DRW
-8 Bit Register found: V1
-8 Bit Register found: V2
-Var found: 3
 ```
