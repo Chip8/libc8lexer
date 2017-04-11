@@ -22,9 +22,8 @@ class C8Token {
   ~C8Token();
   inline std::string Type();
   inline std::string Token();
-  template <typename T>
   C8Token(C8TokenType TypeID, std::string Token, unsigned int Pos_Start,
-          unsigned int Pos_End = null);
+          unsigned int Pos_End = 0);
 
  private:
   C8TokenType TypeID;
