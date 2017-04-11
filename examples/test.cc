@@ -11,6 +11,7 @@ int main() {
     C8Lexer lexer(ss.str());
     lexer.Scan();
     ss.clear();
+    std::cout << lexer.Output();
     ss << lexer.Output();
     a << ss;
     a.close();

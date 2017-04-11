@@ -5,38 +5,39 @@
 
 #ifndef LIBC8_LEXER_H
 #define LIBC8_LEXER_H
-static const char AlphaTable[] = "0123456789ABCDEFGHIJKLMNOPRSTUVWXYZ,@!/\n\t ";
+static const char AlphaTable[] =
+    "0123456789ABCDEFGHIJKLMNOPRSTUVWXYZ,@!:/\n\t ";
 // The empty
 
 enum C8TokenType { INS, BIT8REG, VAR, ADDREG, TIMER, COMMA };
 
+static const std::string C8InsTable[] = {
+    "CLS", "RET", "SYS", "JP",  "CALL", "SE",  "SNE", "LD",  "ADD", "OR",
+    "AND", "XOR", "SUB", "SHR", "SUBN", "SHL", "RND", "DRW", "SKP", "SKNP"};
 // Chip-8 assembly token types
-std::string C8TokenTypeTable[] = {"Instruction", "8 Bit Register",
-                                  "Var",         "Address Register",
-                                  "Timer",       "Comma"};
+static const std::string C8TokenTypeTable[] = {
+    "Instruction",      "8 Bit Register", "Var",
+    "Address Register", "Timer",          "Comma"};
 
 // Chip-8 Token Type class
 class C8Token {
  public:
-  C8Token();
-  ~C8Token();
   inline std::string Type();
-  inline std::string Token();
+  inline std::string TokenStr();
+  std::string Pos();
   C8Token(C8TokenType TypeID, std::string Token, unsigned int Pos_Start,
           unsigned int Pos_End = 0);
 
  private:
   C8TokenType TypeID;
-  std::string TokenStr;
+  std::string Token;
   unsigned int Pos_Start;
   unsigned int Pos_End;
 };
 
 class C8Lexer {
  public:
-  C8Lexer();
   C8Lexer(std::string SourceProg);
-  ~C8Lexer();
   bool Scan();  // scan source and constructs token lists
   std::vector<C8Token>& GetList();
   // Generates lexer output string
@@ -52,5 +53,4 @@ class C8Lexer {
 std::vector<C8Token> libc8Lexer(std::string SourceProg);
 
 std::string libc8LexerOutput(std::vector<C8Token> TokenList);
-
 #endif

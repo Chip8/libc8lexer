@@ -1,21 +1,26 @@
 #include "./libc8lexer.hpp"
 
 #include <algorithm>
-
-C8Token::C8Token(C8TokenType TypeID, std::string Token) {
-  this->Type = TypeID;
+#include <iostream>
+C8Token::C8Token(C8TokenType TypeID, std::string Token, unsigned int Pos_Start,
+                 unsigned int Pos_End) {
+  this->TypeID = TypeID;
   this->Token = Token;
+  this->Pos_Start = Pos_Start;
+  this->Pos_End = Pos_End;
 }
 
 // return Type name
 inline std::string C8Token::Type() { return C8TokenTypeTable[this->TypeID]; }
 
 // return Token string
-inline std::string C8Token::Token() { return this->TokenStr; }
+inline std::string C8Token::TokenStr() { return this->Token; }
 
 inline std::string C8Token::Pos() {
   // if only one character
-  if (this->Pos_End == 0) return this->Pos_Start;
+  if (this->Pos_End == 0) {
+    return std::to_string(Pos_Start);
+  }
   // multiply characters
   else {
     std::stringstream Pos_Range;
@@ -26,7 +31,6 @@ inline std::string C8Token::Pos() {
   }
 }
 C8Lexer::C8Lexer(std::string SourceProg) { this->SourceProg = SourceProg; }
-C8Lexer::~C8Lexer() { delete this->TokenList; }
 
 // scan source and constructs token lists
 bool C8Lexer::Scan() {
@@ -35,7 +39,7 @@ bool C8Lexer::Scan() {
     return false;
   else {
     // Read Source Program Char-By-Char
-    str::string Temp_Token = "";
+    std::string Temp_Token = "";
     for (auto CharInSource = SourceProg.begin();
          CharInSource != SourceProg.end(); CharInSource++) {
       unsigned int NowPos = CharInSource - SourceProg.begin();
@@ -49,10 +53,11 @@ bool C8Lexer::Scan() {
         continue;
       }
       // skip spaces,tabs and newline
-      if (*CharInSource != ' ' || *CharInSource != '\t' ||
+      if (*CharInSource != ' ' && *CharInSource != '\t' &&
           *CharInSource != '\n') {
         Temp_Token += *CharInSource;
       }
+
       // If comma found
       if (Temp_Token == ",") {
         C8Token Token(COMMA, Temp_Token, NowPos);
@@ -67,8 +72,9 @@ bool C8Lexer::Scan() {
         Temp_Token = "";
       }
       // If 8 Register found
-      else if (Temp_Token[0] == 'V' && Token[1] >= '0' && Token[1] <= '9' &&
-               Token[1] >= 'A' && Token[1] <= 'F') {
+      else if (Temp_Token[0] == 'V' &&
+               ((Temp_Token[1] >= '0' && Temp_Token[1] <= '9') ||
+                (Temp_Token[1] >= 'A' && Temp_Token[1] <= 'F'))) {
         C8Token Token(BIT8REG, Temp_Token, NowPos, NowPos + 1);
         this->TokenList.push_back(Token);
         Temp_Token = "";
@@ -89,25 +95,29 @@ bool C8Lexer::Scan() {
       else if (*(CharInSource + 1) == ' ' || *(CharInSource + 1) == ',' ||
                *(CharInSource + 1) == '\t' || *(CharInSource + 1) == '\n' ||
                CharInSource + 1 == SourceProg.end()) {
-        C8Token Token(VAR, Temp_Token, NowPos, NowPos + Temp_Token.length());
-        this->TokenList.push_back(Token);
-        Temp_Token = "";
+        if (!Temp_Token.empty()) {
+          C8Token Token(VAR, Temp_Token, NowPos, NowPos + Temp_Token.length());
+
+          this->TokenList.push_back(Token);
+          Temp_Token = "";
+        }
       }
     }
-    return true;
   }
+  return true;
+}
 
-  // Return TokenList (Waring : Empty list would also returned)
-  std::vector<C8Token>& C8Lexer::GetList() { return this->TokenList; }
+// Return TokenList (Waring : Empty list would also returned)
+std::vector<C8Token>& C8Lexer::GetList() { return this->TokenList; }
 
-  // Generates lexer output string
-  std::string C8Lexer::Output(std::vector<C8Token> TokenList) {
-    std::string LexerOutputStream;
-    for (auto Token : TokenList) {
-      LexerOutputStream << "[" Token.type() << "]    (" << Token.Pos()
-                        << ") : " << Token.token() << std::endl;
-    }
-    return LexerOutputString.str();
+// Generates lexer output string
+std::string C8Lexer::Output(std::vector<C8Token> TokenList) {
+  std::stringstream LexerOutputStream;
+  for (auto Token : TokenList) {
+    LexerOutputStream << "[" << Token.Type() << "]    (" << Token.Pos()
+                      << ") : " << Token.TokenStr() << std::endl;
   }
+  return LexerOutputStream.str();
+}
 
-  std::string C8Lexer::Output() { return this.Output(this->TokenList); }
+std::string C8Lexer::Output() { return this->Output(this->TokenList); }
