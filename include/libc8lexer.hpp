@@ -49,7 +49,7 @@ class C8Lexer {
   std::vector<C8Token> TokenList;
 }
 
-std::vector<C8Token>
+std::vector<class C8Token>
 libc8Lexer(std::string SourceProg);
 
 std::string libc8LexerOutput(std::vector<C8Token> TokenList);
