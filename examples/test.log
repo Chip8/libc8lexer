@@ -1,1 +1,19 @@
-ADD V1  V2 SUB V1  V3 DRW V1  V2  2 
+[Instruction]    (18 - 21) : ADD
+[8 Bit Register]    (21 - 22) : V1
+[Comma]    (22) : ,
+[8 Bit Register]    (25 - 26) : V2
+[Instruction]    (29 - 32) : SUB
+[8 Bit Register]    (32 - 33) : V1
+[Comma]    (33) : ,
+[8 Bit Register]    (36 - 37) : V3
+[Instruction]    (40 - 43) : DRW
+[8 Bit Register]    (43 - 44) : V1
+[Comma]    (44) : ,
+[8 Bit Register]    (47 - 48) : V2
+[Comma]    (48) : ,
+[Var]    (50 - 51) : 2
+[Instruction]    (53 - 55) : JP
+[Address Register]    (55) : I
+[Instruction]    (60 - 64) : CALL
+[Address Register]    (62) : I
+[Instruction]    (66 - 69) : CLS
