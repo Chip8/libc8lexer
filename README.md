@@ -2,6 +2,7 @@
 
 A lexer module for Chip-8 assembly.
 
+*Extra Link:  [Standard Chip-8 Instructions](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#3.1)*
 ## Usage
 
 There a mainly two functions.Each of them have two overload,one has log output and other doesn't.
