@@ -1,5 +1,6 @@
+#include <fstream>
+#include <iostream>
 #include "../include/libc8lexer.hpp"
-
 // To test the log output version
 int main() {
   std::ofstream a("test.log");  // out put log to test1.log
@@ -7,7 +8,11 @@ int main() {
     std::ifstream b("test.asm");
     std::stringstream ss;
     ss << b.rdbuf();
-    for (auto x : libc8Lexer(ss.str())) a << x << " ";
+    C8Lexer lexer(ss.str());
+    lexer.Scan();
+    ss.clear();
+    ss << lexer.Output();
+    a << ss;
     a.close();
   }
   return 0;

@@ -28,7 +28,7 @@ class C8Token {
 
  private:
   C8TokenType TypeID;
-  std::string Token;
+  std::string TokenStr;
   unsigned int Pos_Start;
   unsigned int Pos_End;
 };
