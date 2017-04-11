@@ -49,8 +49,4 @@ class C8Lexer {
   bool Scanned = false;
   std::vector<C8Token> TokenList;
 };
-
-std::vector<C8Token> libc8Lexer(std::string SourceProg);
-
-std::string libc8LexerOutput(std::vector<C8Token> TokenList);
 #endif
