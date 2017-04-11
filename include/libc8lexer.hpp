@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-const char AlphaTable[] = "0123456789ABCDEFHIJKLNPRSTW";
+const char AlphaTable[] = "0123456789ABCDEFHIJKLNPRSTUVW";
 // The empty
 class LexEmptyExc : public std::runtime_error {
  public:
@@ -34,18 +34,17 @@ std::vector<std::string> libc8LineLineLexer(std::string ProgLine) {
   std::vector<std::string> TokenList;
   try {
     if (ProgLine.length() == 0) throw LexEE;
-    if (ProgLine.back() != ';') ProgLine += ";";
+    if (ProgLine.back() != ';')
+      ProgLine += ";";  // Add a ';' to end for split line;
     std::string Token("");
     for (auto x : ProgLine) {
-      if (std::find(std::begin(AlphaTable), std::end(AlphaTable), x) ==
-          std::end(AlphaTable))
-        throw LexET;
-      std::string TokenType;
       if (x == ' ' || x == ',' || x == ';') {  // skip ' ' and ','
-        if (&x == &ProgLine.back() && x != ' ' && x != ',' && x != ';') {
-          Token += x;
-        }
+        TokenList.push_back(Token);
+        Token = "";
       } else {
+        if (std::find(std::begin(AlphaTable), std::end(AlphaTable), x) ==
+            std::end(AlphaTable))
+          throw LexET;
         Token += x;
       }
     }
@@ -61,7 +60,7 @@ std::vector<std::string> libc8Lexer(std::string Source) {
   std::vector<std::string> TokenList;
   std::string ProgLine;
   while (std::getline(SourceStream, ProgLine)) {
-    std::vector<std::string> LineList = libc8LineLineLexer(ProgLine, OutStream);
+    std::vector<std::string> LineList = libc8LineLineLexer(ProgLine);
     TokenList.insert(TokenList.end(), LineList.begin(), LineList.end());
   }
   return TokenList;
