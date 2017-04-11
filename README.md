@@ -23,7 +23,7 @@ SUB V2, V3
 std::istream infile(test.asm);
 std::stringstream ss;
 ss<<infile.rdbuf();
-for(auto x:libc8Lexer(ss.str(),infile))
+for(auto x:libc8Lexer(ss.str()))
 	std::cout<<x<<" ";
 infile.close();
 ```
