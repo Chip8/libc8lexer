@@ -38,7 +38,7 @@ class C8Lexer {
   C8Lexer(std::string SourceProg);
   ~C8Lexer();
   bool Scan();  // scan source and constructs token lists
-  std::vector<class C8Token>& GetList();
+  std::vector<C8Token>& GetList();
   // Generates lexer output string
   std::string Output(std::vector<C8Token> TokenList);
   std::string Output();
@@ -47,10 +47,9 @@ class C8Lexer {
   std::string SourceProg;
   bool Scanned = false;
   std::vector<C8Token> TokenList;
-}
+};
 
-std::vector<class C8Token>
-libc8Lexer(std::string SourceProg);
+std::vector<C8Token> libc8Lexer(std::string SourceProg);
 
 std::string libc8LexerOutput(std::vector<C8Token> TokenList);
 
