@@ -3,9 +3,9 @@
 #include "../include/libc8lexer.hpp"
 // To test the log output version
 int main() {
-  std::ofstream a("a.log");  // out put log to test1.log
+  std::ofstream a("test1.log");  // out put log to test1.log
   if (a.is_open()) {
-    std::ifstream b("ex.asm");
+    std::ifstream b("test1.asm");
     std::stringstream ss;
     ss << b.rdbuf();
     libc8Lexer lexer(ss.str());
