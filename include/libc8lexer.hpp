@@ -38,6 +38,7 @@ class libc8Token {
 class libc8Lexer {
  public:
   libc8Lexer(std::string SourceProg);
+  libc8Lexer(std::stringstream& SourceStream);  // receive streams
   bool Scan();  // scan source and constructs token lists
   std::vector<libc8Token>& GetList();
   // Generates lexer output string

@@ -1,0 +1,12 @@
+[Instruction]    (0 - 2) : ADD
+[8 Bit Register]    (4 - 5) : V1
+[Comma]    (6) : ,
+[8 Bit Register]    (8 - 9) : V2
+[Instruction]    (11 - 13) : SUB
+[8 Bit Register]    (15 - 16) : V2
+[Comma]    (17) : ,
+[8 Bit Register]    (19 - 20) : V3
+[Instruction]    (22 - 23) : JP
+[Address Register]    (25) : I
+[Instruction]    (27 - 30) : CALL
+[Address Register]    (32) : I
